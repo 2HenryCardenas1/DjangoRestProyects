@@ -1,0 +1,128 @@
+# Crear el entorno virtual
+python -m venv nombreEntornoVirtual
+# Activar el ambiente virtual
+venv/bin/activate.bat
+
+# Instalamos librerias
+pip install django djangorestframework djangorestframework-simplejwt django-model-utils
+
+#Creamos un proyecto de Django
+
+django-admin.py startproject ‘nombre del proyecto’
+
+#Creamos la aplicacion de Django
+
+python manage.py startapp nameApp
+
+# Editamos setting.py agregando 'rest_framework' y el nombre de la aplicacion en INSTALLED_APPS
+
+INSTALLED_APPS = [
+    ...,
+    'nameApp',
+    'rest_framework',
+]
+
+#creamos un super usuario para la aplicacion 
+
+python manage.py createsuperuser
+
+
+#HACIENDO UN OVERRIDE A LA TABLA USUARIO (HACERLO SIEMPRE AL INICIO DEL PROYECTO)
+
+#Crear una nueva aplicacion para el manejo de usuarios
+
+python manage.py startapp 'nombreAplicacion'
+
+#Implementar la aplicacon en settings.py
+INSTALLED_APPS = [
+    ...,
+    'nameApp',
+]
+
+#Creamos una clase vacia e importamos AbstractUser en nuestro models.py de nuestra aplicacion nueva
+
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    pass
+
+
+#Hacemos una migracion a la base de datos
+
+1)pyhton manage.py makemigrations
+2)python manage.py migrate
+
+
+#JWT
+
+#Instalar djangorestframework-simplejwt
+
+pip install djangorestframework-simplejwt
+
+#Editar settings.py
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+
+}
+
+#Conexion con postgres
+
+#Editar seting.py y instalar psycopg2
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': '',
+        'NAME': '',
+        'PASSWORD': '',
+        'HOST': ''
+
+    }
+}
+
+#Creacion de documentacion de la API
+
+#Instalar
+pip install -U drf-yasg
+
+#En settings.py
+
+INSTALLED_APPS = [
+   ...
+   'django.contrib.staticfiles',
+   'drf_yasg',
+   ...
+]
+
+#En mi aplicacion principal archivo urls.py
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+
+)
+
+# Rutas para la documentacion de la api
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc')
+
+
+    python.exe -m pip install --upgrade pip
+
+#Configuracion del tiempo de vida de un token, se va al archivo settings.py
+
+# Aca se edita la hora de expiracion del TOKEN
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7)
+}
